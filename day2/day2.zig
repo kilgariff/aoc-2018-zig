@@ -9,9 +9,6 @@ const allocator = &fixed_allocator.allocator;
 
 pub fn main() !void {
 
-    // Hash map of times each character was encountered:
-    var occurred = std.AutoHashMap(u8, u32).init(allocator);
-
     // Open stdout:
     var stdout_file = try std.io.getStdOut();
     const out = &stdout_file.outStream().stream;
@@ -21,6 +18,12 @@ pub fn main() !void {
 
     // Process each line in the file:
     var lines = mem.split(contents, "\n");
+
+    // Hash map of times each character was encountered:
+    var occurred = std.AutoHashMap(u8, u32).init(allocator);
+
+    try out.print("---------------------\n");
+    try out.print("Part 1:\n");
 
     var two_occurrences_count: u32 = 0;
     var three_occurrences_count: u32 = 0;
@@ -61,8 +64,6 @@ pub fn main() !void {
         if (found_three_occurrence) {
             three_occurrences_count += 1;
         }
-
-        try out.print("----\n");
     }
 
     checksum = two_occurrences_count * three_occurrences_count;
