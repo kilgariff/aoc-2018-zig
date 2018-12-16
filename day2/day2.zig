@@ -30,8 +30,6 @@ pub fn main() !void {
 
         occurred.clear();
 
-        try out.print("Line {}:\n", line);
-
         // Count character occurrences:
         for (line) |c| {
             var result = try occurred.getOrPutValue(c, 0);
@@ -48,11 +46,9 @@ pub fn main() !void {
             switch (next.value) {
                 2 => { 
                     found_two_occurrence = true;
-                    try out.print("\t{c} occurred {} times\n", next.key, next.value);
                 },
                 3 => {
                     found_three_occurrence = true;
-                    try out.print("\t{c} occurred {} times\n", next.key, next.value);
                 },
                 else => {}
             }
@@ -80,9 +76,11 @@ pub fn main() !void {
     lines.index = 0;
     var lines_inner = lines;
     var result: ?[] const u8 = null;
+    var diff_char_idx: usize = 0;
     
     while (lines.next()) |line| {
 
+        lines_inner.index = 0;
         while (lines_inner.next()) |other_line| {
 
             if (lines.index == lines_inner.index) {
@@ -99,12 +97,12 @@ pub fn main() !void {
             while (i < line.len) : (i += 1) {
                 if (line[i] != other_line[i]) {
                     diffs += 1;
+                    diff_char_idx = i;
                 }
             }
 
-            if (diffs == 2) {
+            if (diffs == 1) {
                 result = line;
-                try out.print("Found line with just one difference: {}\n", line);
                 break;
             }
         }
@@ -115,6 +113,17 @@ pub fn main() !void {
     }
 
     if (result) |line| {
-        try out.print("Found line with just one difference: {}", line);
+        try out.print("---------------------\n");
+        try out.print("Part 2:\n");
+        try out.print("Found line with just one difference: {}\n", line);
+        try out.print("Chars in common: ");
+
+        for (line) |c, i| {
+            if (i != diff_char_idx) {
+                try out.print("{c}", c);
+            }
+        }
+
+        try out.print("\n");
     }
 }
